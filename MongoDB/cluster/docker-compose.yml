@@ -2,132 +2,114 @@ version: "3.9"
 
 services:
 
-  # Replica Set 1
+  ## Shards
+  ## Shards:RS1
   mongo-rs1-1:
     image: mongo:4.4.14-focal
-    command:
+    command: mongod
       --shardsvr
       --replSet RS1
     volumes:
       - ./data/rs-1/db-1:/data/db
 
-  # Replica Set 1
   mongo-rs1-2:
     image: mongo:4.4.14-focal
-    command:
+    command: mongod
       --shardsvr
       --replSet RS1
     volumes:
       - ./data/rs-1/db-2:/data/db
 
-  # Replica Set 1
   mongo-rs1-3:
     image: mongo:4.4.14-focal
-    command:
+    command: mongod
       --shardsvr
       --replSet RS1
     volumes:
       - ./data/rs-1/db-3:/data/db
 
-  # Replica Set 2
+  ## Shards:RS2
   mongo-rs2-1:
     image: mongo:4.4.14-focal
-    command:
+    command: mongod
       --shardsvr
       --replSet RS2
     volumes:
       - ./data/rs-2/db-1:/data/db
 
-  # Replica Set 2
   mongo-rs2-2:
     image: mongo:4.4.14-focal
-    command:
+    command: mongod
       --shardsvr
       --replSet RS2
     volumes:
       - ./data/rs-2/db-2:/data/db
 
-  # Replica Set 2
   mongo-rs2-3:
     image: mongo:4.4.14-focal
-    command:
+    command: mongod
       --shardsvr
       --replSet RS2
     volumes:
       - ./data/rs-2/db-3:/data/db
 
-  # Replica Set 3
+  ## Shards:RS3
   mongo-rs3-1:
     image: mongo:4.4.14-focal
-    command:
+    command: mongod
       --shardsvr
       --replSet RS3
     volumes:
       - ./data/rs-3/db-1:/data/db
 
-  # Replica Set 3
   mongo-rs3-2:
     image: mongo:4.4.14-focal
-    command:
+    command: mongod
       --shardsvr
       --replSet RS3
     volumes:
       - ./data/rs-3/db-2:/data/db
 
-  # Replica Set 3
   mongo-rs3-3:
     image: mongo:4.4.14-focal
-    command:
+    command: mongod
       --shardsvr
       --replSet RS3
     volumes:
       - ./data/rs-3/db-3:/data/db
 
-  # кластером конфига(3 инстанса)
+  ## Config Servers
   mongodb-cfg-1:
     image: mongo:4.4.14-focal
-    command:
+    command: mongod
       --configsvr
       --replSet RScfg
     volumes:
-      - ./data/cfg/db-1:/data/db
+      - ./data/cfg/db-1:/data/configdb
 
-  # кластером конфига(3 инстанса)
   mongodb-cfg-2:
     image: mongo:4.4.14-focal
-    command:
+    command: mongod
       --configsvr
       --replSet RScfg
     volumes:
-      - ./data/cfg/db-2:/data/db
+      - ./data/cfg/db-2:/data/configdb
 
-  # кластером конфига(3 инстанса)
   mongodb-cfg-3:
     image: mongo:4.4.14-focal
-    command:
+    command: mongod
       --configsvr
       --replSet RScfg
     volumes:
-      - ./data/cfg/db-3:/data/db
+      - ./data/cfg/db-3:/data/configdb
 
-  # mongos
+  ## Routers
   mongos:
     image: mongo:4.4.14-focal
     command: mongos 
       --configdb RScfg/mongodb-cfg-1:27019,mongodb-cfg-2:27019,mongodb-cfg-3:27019
     depends_on:
-      - mongo-rs1-1
-      - mongo-rs1-2
-      - mongo-rs1-3
-      - mongo-rs2-1
-      - mongo-rs2-2
-      - mongo-rs2-3
-      - mongo-rs3-1
-      - mongo-rs3-2
-      - mongo-rs3-3
       - mongodb-cfg-1
       - mongodb-cfg-2
       - mongodb-cfg-3
-    profiles:
-      - mongos
 

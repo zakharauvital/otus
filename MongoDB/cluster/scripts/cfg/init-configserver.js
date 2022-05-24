@@ -1,0 +1,1 @@
+rs.initiate({"_id" : "RScfg", configsvr: true, members : [{"_id" : 0, priority : 3, host : "mongodb-cfg-1:27019"},{"_id" : 1, host : "mongodb-cfg-2:27019"},{"_id" : 2, host : "mongodb-cfg-3:27019"}]})

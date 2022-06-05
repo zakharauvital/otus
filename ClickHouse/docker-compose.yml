@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+
+  clickhouse-server-1:
+    image: clickhouse/clickhouse-server
+    volumes:
+      - ./data/db1:/var/lib/clickhouse:rw
+
+  clickhouse-server-2:
+    image: clickhouse/clickhouse-server
+    volumes:
+      - ./data/db2:/var/lib/clickhouse:rw
+
+  clickhouse-server-3:
+    image: clickhouse/clickhouse-server
+    volumes:
+      - ./data/db3:/var/lib/clickhouse:rw
+

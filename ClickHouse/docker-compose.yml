@@ -6,14 +6,17 @@ services:
     image: clickhouse/clickhouse-server
     volumes:
       - ./data/db1:/var/lib/clickhouse:rw
+      - ./config:/etc/clickhouse-server/config.d
 
   clickhouse-server-2:
     image: clickhouse/clickhouse-server
     volumes:
       - ./data/db2:/var/lib/clickhouse:rw
+      - ./config:/etc/clickhouse-server/config.d
 
   clickhouse-server-3:
     image: clickhouse/clickhouse-server
     volumes:
       - ./data/db3:/var/lib/clickhouse:rw
+      - ./config:/etc/clickhouse-server/config.d
 

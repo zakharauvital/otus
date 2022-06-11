@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<clickhouse>
+    <remote_servers>
+        <perftest_3shards_1replicas>
+            <shard>
+                <replica>
+                    <host>clickhouse-server-1</host>
+                    <port>9000</port>
+                </replica>
+            </shard>
+            <shard>
+                <replica>
+                    <host>clickhouse-server-2</host>
+                    <port>9000</port>
+                </replica>
+            </shard>
+            <shard>
+                <replica>
+                    <host>clickhouse-server-3</host>
+                    <port>9000</port>
+                </replica>
+            </shard>
+        </perftest_3shards_1replicas>
+    </remote_servers>
+</clickhouse>

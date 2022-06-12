@@ -749,7 +749,7 @@
 10) **вывод**:
     - ускорение более чем в ~3 раза
 11) развернуть дополнительно одну из тестовых БД [https://clickhouse.com/docs/en/getting-started/example-datasets](example-datasets) , протестировать скорость запросов
-    1) возьмем набор данных [https://clickhouse.com/docs/en/getting-started/example-datasets/uk-price-paid](UK Property Price Paid)
+    1) возьмем набор данных [https://clickhouse.com/docs/en/getting-started/example-datasets/uk-price-paid](https://clickhouse.com/docs/en/getting-started/example-datasets/uk-price-paid)
     2) скачаем 
        1) `wget http://prod.publicdata.landregistry.gov.uk.s3-website-eu-west-1.amazonaws.com/pp-complete.csv`
     3) прокинем в контейнер первой ноды 

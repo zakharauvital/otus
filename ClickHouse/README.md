@@ -259,7 +259,7 @@
          ```
 7) развернуть Кликхаус в кластерном исполнении:
    1) обновим [./docker-compose.yml](docker-compose.yml) добавим 3 шарды по 1 одной реплике в каждой
-      1) монтируем конфиг кластера [./config/perftest_3shards_1replicas.xml](perftest_3shards_1replicas.xml)
+      1) монтируем конфиг кластера [./config/perftest_3shards_1replicas.xml](./config/perftest_3shards_1replicas.xml)
 8) создать БД и распределенную таблицу и заполним данными:
    1) создаем БД "tutorial" на каждой ноде:
       1) `docker compose exec clickhouse-server-1 clickhouse-client --query "CREATE DATABASE IF NOT EXISTS tutorial"`
@@ -669,7 +669,7 @@
       4) импортируем данные в таблицу tutorial.visits_v1 на 1-ой ноде (clickhouse-server-1):
          1) `clickhouse-client --query "INSERT INTO tutorial.visits_v1 FORMAT TSV" --max_insert_block_size=100000 < visits_v1.tsv`
       5) важно, чтобы ноды могли синкаться между собой, 
-         1) добавим конфиг [./config/docker_related_config.xml](docker_related_config.xml)
+         1) добавим конфиг [./config/docker_related_config.xml](./config/docker_related_config.xml)
       6) создаем распределенную таблицу `tutorial.visits_all`:
          1) ```clickhouse  
             CREATE TABLE tutorial.visits_all AS tutorial.visits_local
@@ -678,7 +678,7 @@
          2) **где**:
             1) `perftest_3shards_1replicas` 
                - имя кластера в конфигурационном файле сервера: 
-                 - из файла [./config/perftest_3shards_1replicas.xml](perftest_3shards_1replicas.xml)
+                 - из файла [./config/perftest_3shards_1replicas.xml](./config/perftest_3shards_1replicas.xml)
             2) `tutorial` 
                - имя удалённой базы данных
             3) `visits_local` 

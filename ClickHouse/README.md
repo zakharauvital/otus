@@ -747,7 +747,175 @@
             10 rows in set. Elapsed: 0.154 sec. Processed 1.51 million rows, 120.52 MB (9.77 million rows/s., 781.05 MB/s.)
             ```
 10) **вывод**:
-    - ускорение в ~3,5-3,6 раза
+    - ускорение более чем в ~3 раза
 11) развернуть дополнительно одну из тестовых БД [https://clickhouse.com/docs/en/getting-started/example-datasets](example-datasets) , протестировать скорость запросов
-12) 
+    1) возьмем набор данных [https://clickhouse.com/docs/en/getting-started/example-datasets/uk-price-paid](UK Property Price Paid)
+    2) скачаем 
+       1) `wget http://prod.publicdata.landregistry.gov.uk.s3-website-eu-west-1.amazonaws.com/pp-complete.csv`
+    3) прокинем в контейнер первой ноды 
+       1) `docker cp pp-complete.csv 1552f1dcfdd0:/pp-complete.csv`
+    4) импортируем данные:
+       1) ```shell
+          clickhouse-local --input-format CSV --structure '
+                  uuid String,
+                  price UInt32,
+                  time DateTime,
+                  postcode String,
+                  a String,
+                  b String,
+                  c String,
+                  addr1 String,
+                  addr2 String,
+                  street String,
+                  locality String,
+                  town String,
+                  district String,
+                  county String,
+                  d String,
+                  e String
+              ' --query "
+              WITH splitByChar(' ', postcode) AS p
+              SELECT
+                  price,
+                  toDate(time) AS date,
+                  p[1] AS postcode1,
+                  p[2] AS postcode2,
+                  transform(a, ['T', 'S', 'D', 'F', 'O'], ['terraced', 'semi-detached', 'detached', 'flat', 'other']) AS type,
+                  b = 'Y' AS is_new,
+                  transform(c, ['F', 'L', 'U'], ['freehold', 'leasehold', 'unknown']) AS duration,
+                  addr1,
+                  addr2,
+                  street,
+                  locality,
+                  town,
+                  district,
+                  county,
+                  d = 'B' AS category
+              FROM table" --date_time_input_format best_effort < pp-complete.csv | clickhouse-client --query "INSERT INTO tutorial.uk_price_paid FORMAT TSV"
+          ```
+    5) валидируем данные:
+       1) `SELECT count() FROM uk_price_paid;`
+       2) ```shell
+          ┌──count()─┐
+          │ 27176256 │
+          └──────────┘
+          ```
+       3) имеем более 27 млн записей
+    6) создаем на всех нодах таблицы:
+       1) ```clickhouse
+          CREATE TABLE uk_price_paid_local
+          (
+                price UInt32,
+                date Date,
+                postcode1 LowCardinality(String),
+                postcode2 LowCardinality(String),
+                type Enum8('terraced' = 1, 'semi-detached' = 2, 'detached' = 3, 'flat' = 4, 'other' = 0),
+                is_new UInt8,
+                duration Enum8('freehold' = 1, 'leasehold' = 2, 'unknown' = 0),
+                addr1 String,
+                addr2 String,
+                street LowCardinality(String),
+                locality LowCardinality(String),
+                town LowCardinality(String),
+                district LowCardinality(String),
+                county LowCardinality(String),
+                category UInt8
+          ) ENGINE = MergeTree ORDER BY (postcode1, postcode2, addr1, addr2);
+          ```
+    7) создаем и импортируем в распределенную таблицу `tutorial.uk_price_paid_all`:
+       1) ```clickhouse
+          CREATE TABLE tutorial.uk_price_paid_all AS tutorial.uk_price_paid_local
+          ENGINE = Distributed(perftest_3shards_1replicas, tutorial, uk_price_paid_local, rand());
+          
+          INSERT INTO tutorial.uk_price_paid_all SELECT * FROM tutorial.uk_price_paid;
+          
+          Elapsed: 141.749 sec. Processed 27.18 million rows, 1.30 GB (191.72 thousand rows/s., 9.17 MB/s.)
+          ```
+       2) на каждую шарду получается, примерно, по 9 млн записей, что в итоге дает 9 млн * 3 шарда = 27 млн записей
+    8) тестируем производительность:
+       1) на одной ноде `tutorial.uk_price_paid`:
+          1) выполним оптимизацию:
+             1) `OPTIMIZE TABLE tutorial.uk_price_paid FINAL`
+          2) очищаем кеши `SYSTEM DROP MARK CACHE;`
+          3) ```clickhouse
+             SELECT toYear(date) AS year, round(avg(price)) AS price, bar(price, 0, 1000000, 80) 
+             FROM tutorial.uk_price_paid GROUP BY year ORDER BY year;
+             
+             ┌─year─┬──price─┬─bar(round(avg(price)), 0, 1000000, 80)─┐
+             │ 1995 │  67933 │ █████▍                                 │
+             │ 1996 │  71507 │ █████▋                                 │
+             │ 1997 │  78536 │ ██████▎                                │
+             │ 1998 │  85439 │ ██████▋                                │
+             │ 1999 │  96038 │ ███████▋                               │
+             │ 2000 │ 107486 │ ████████▌                              │
+             │ 2001 │ 118888 │ █████████▌                             │
+             │ 2002 │ 137945 │ ███████████                            │
+             │ 2003 │ 155893 │ ████████████▍                          │
+             │ 2004 │ 178887 │ ██████████████▎                        │
+             │ 2005 │ 189356 │ ███████████████▏                       │
+             │ 2006 │ 203530 │ ████████████████▎                      │
+             │ 2007 │ 219379 │ █████████████████▌                     │
+             │ 2008 │ 217054 │ █████████████████▎                     │
+             │ 2009 │ 213418 │ █████████████████                      │
+             │ 2010 │ 236107 │ ██████████████████▊                    │
+             │ 2011 │ 232803 │ ██████████████████▌                    │
+             │ 2012 │ 238381 │ ███████████████████                    │
+             │ 2013 │ 256923 │ ████████████████████▌                  │
+             │ 2014 │ 279984 │ ██████████████████████▍                │
+             │ 2015 │ 297263 │ ███████████████████████▋               │
+             │ 2016 │ 313470 │ █████████████████████████              │
+             │ 2017 │ 346297 │ ███████████████████████████▋           │
+             │ 2018 │ 350486 │ ████████████████████████████           │
+             │ 2019 │ 351985 │ ████████████████████████████▏          │
+             │ 2020 │ 375697 │ ██████████████████████████████         │
+             │ 2021 │ 379729 │ ██████████████████████████████▍        │
+             │ 2022 │ 370402 │ █████████████████████████████▋         │
+             └──────┴────────┴────────────────────────────────────────┘
+             
+             28 rows in set. Elapsed: 0.500 sec. Processed 27.18 million rows, 163.06 MB (54.34 million rows/s., 326.06 MB/s.)
+             ```
+       2) на распределенной таблице `tutorial.uk_price_paid_all`:
+          1) на каждой шардированной ноде выполним:
+             1) `OPTIMIZE TABLE tutorial.uk_price_paid_local FINAL`
+          2) очищаем кеши `SYSTEM DROP MARK CACHE;`
+          3) ```clickhouse
+             
+             SELECT toYear(date) AS year, round(avg(price)) AS price, bar(price, 0, 1000000, 80) 
+             FROM tutorial.uk_price_paid_all GROUP BY year ORDER BY year;
+             
+             ┌─year─┬──price─┬─bar(round(avg(price)), 0, 1000000, 80)─┐
+             │ 1995 │  67933 │ █████▍                                 │
+             │ 1996 │  71507 │ █████▋                                 │
+             │ 1997 │  78536 │ ██████▎                                │
+             │ 1998 │  85439 │ ██████▋                                │
+             │ 1999 │  96038 │ ███████▋                               │
+             │ 2000 │ 107486 │ ████████▌                              │
+             │ 2001 │ 118888 │ █████████▌                             │
+             │ 2002 │ 137945 │ ███████████                            │
+             │ 2003 │ 155893 │ ████████████▍                          │
+             │ 2004 │ 178887 │ ██████████████▎                        │
+             │ 2005 │ 189356 │ ███████████████▏                       │
+             │ 2006 │ 203530 │ ████████████████▎                      │
+             │ 2007 │ 219379 │ █████████████████▌                     │
+             │ 2008 │ 217054 │ █████████████████▎                     │
+             │ 2009 │ 213418 │ █████████████████                      │
+             │ 2010 │ 236107 │ ██████████████████▊                    │
+             │ 2011 │ 232803 │ ██████████████████▌                    │
+             │ 2012 │ 238381 │ ███████████████████                    │
+             │ 2013 │ 256923 │ ████████████████████▌                  │
+             │ 2014 │ 279984 │ ██████████████████████▍                │
+             │ 2015 │ 297263 │ ███████████████████████▋               │
+             │ 2016 │ 313470 │ █████████████████████████              │
+             │ 2017 │ 346297 │ ███████████████████████████▋           │
+             │ 2018 │ 350486 │ ████████████████████████████           │
+             │ 2019 │ 351985 │ ████████████████████████████▏          │
+             │ 2020 │ 375697 │ ██████████████████████████████         │
+             │ 2021 │ 379729 │ ██████████████████████████████▍        │
+             │ 2022 │ 370402 │ █████████████████████████████▋         │
+             └──────┴────────┴────────────────────────────────────────┘
+             
+             28 rows in set. Elapsed: 0.219 sec. Processed 27.18 million rows, 163.06 MB (124.35 million rows/s., 746.09 MB/s.)
+             ```
+    9) **вывод**:
+       1) выборка на распределенной таблице в ~2,3 раза быстрее.
       

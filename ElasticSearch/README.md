@@ -106,7 +106,7 @@
                 }
              }
           }
-         ```
+        ```
       - создаем шаблон на основе компонента `test-index-component`:
          - ```json lines
             PUT _index_template/test-index-template
@@ -122,7 +122,7 @@
             {
                "acknowledged" : true
             }
-            ```
+           ```
       - можно создавать индексы содержащие паттерн `test-index-*` по ранее созданному шаблону `test-index-template`:
          - ```json lines
             PUT /test-index-02
@@ -132,7 +132,7 @@
                "shards_acknowledged" : true,
                "index" : "test-index-02"
             }
-            ```
+           ```
          - ![img.png](img/img2.png)
          - ![img.png](img/img3.png)
 8) Добавить в индекс, как минимум 3 документа, желательно со следующим содержанием:

@@ -62,7 +62,7 @@
       }
       ```
 7) Создать для индекса pattern:
-   1) создаем компонент `test-index-component`:
+   - создаем компонент `test-index-component`:
       - ```json lines
           PUT _component_template/test-index-component
           {

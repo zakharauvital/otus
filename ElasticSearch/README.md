@@ -62,8 +62,8 @@
       }
       ```
 7) Создать для индекса pattern:
-   4) создаем компонент `test-index-component`:
-      1) ```json lines
+   1) создаем компонент `test-index-component`:
+      - ```json lines
           PUT _component_template/test-index-component
           {
              "template": {
@@ -107,8 +107,8 @@
              }
           }
          ```
-      2) создаем шаблон на основе компонента `test-index-component`:
-         1) ```json lines
+      - создаем шаблон на основе компонента `test-index-component`:
+         - ```json lines
             PUT _index_template/test-index-template
             {
                "index_patterns": [
@@ -123,8 +123,8 @@
                "acknowledged" : true
             }
             ```
-      3) можно создавать индексы содержащие паттерн `test-index-*` по ранее созданному шаблону `test-index-template`:
-         1) ```json lines
+      - можно создавать индексы содержащие паттерн `test-index-*` по ранее созданному шаблону `test-index-template`:
+         - ```json lines
             PUT /test-index-02
             
             {
@@ -133,8 +133,8 @@
                "index" : "test-index-02"
             }
             ```
-         3) ![img.png](img/img2.png)
-         4) ![img.png](img/img3.png)
+         - ![img.png](img/img2.png)
+         - ![img.png](img/img3.png)
 8) Добавить в индекс, как минимум 3 документа, желательно со следующим содержанием:
    1) _«моя мама мыла посуду а кот жевал сосиски»_
       1) ```json lines

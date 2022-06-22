@@ -62,7 +62,7 @@
       }
       ```
 7) Создать для индекса pattern:
-   - создаем компонент `test-index-component`:
+   - создаем **компонент** `test-index-component`:
       - ```json lines
           PUT _component_template/test-index-component
           {
@@ -107,34 +107,34 @@
              }
           }
         ```
-      - создаем шаблон на основе компонента `test-index-component`:
-         - ```json lines
-            PUT _index_template/test-index-template
-            {
-               "index_patterns": [
-                 "test-index-*"
-               ],
-               "composed_of": [
-                 "test-index-component"
-               ]
-            }
+   - создаем **шаблон** `test-index-template` на основе компонента `test-index-component`:
+      - ```json lines
+         PUT _index_template/test-index-template
+         {
+            "index_patterns": [
+              "test-index-*"
+            ],
+            "composed_of": [
+              "test-index-component"
+            ]
+         }
             
-            {
-               "acknowledged" : true
-            }
-           ```
-      - можно создавать индексы содержащие паттерн `test-index-*` по ранее созданному шаблону `test-index-template`:
-         - ```json lines
-            PUT /test-index-02
+         {
+            "acknowledged" : true
+         }
+        ```
+   - можно создавать индексы содержащие паттерн `test-index-*` по ранее созданному шаблону `test-index-template`:
+      - ```json lines
+         PUT /test-index-02
             
-            {
-               "acknowledged" : true,
-               "shards_acknowledged" : true,
-               "index" : "test-index-02"
-            }
-           ```
-         - ![img.png](img/img2.png)
-         - ![img.png](img/img3.png)
+         {
+            "acknowledged" : true,
+            "shards_acknowledged" : true,
+            "index" : "test-index-02"
+         }
+        ```
+      - ![img.png](img/img2.png)
+      - ![img.png](img/img3.png)
 8) Добавить в индекс, как минимум 3 документа, желательно со следующим содержанием:
    1) _«моя мама мыла посуду а кот жевал сосиски»_
       1) ```json lines

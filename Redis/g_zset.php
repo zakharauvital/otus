@@ -7,3 +7,4 @@ JSON;
     $data = 'ZADD zset ' . $i . ' "' . addslashes($json) . '"' . PHP_EOL;
     file_put_contents('./datasets/zset.txt', $data, FILE_APPEND);
 }
+

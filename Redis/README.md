@@ -31,5 +31,6 @@ Redis
    1) `docker cp ./datasets/zset.txt c974298c8904:/data/zset.txt`
    2) заходим в контейнер `docker compose exec redis bash`
    3) `redis-cli < zset.txt`
-7) 
+7) протестировать скорость сохранения и чтения:
+   1) 
  

@@ -16,7 +16,7 @@ Redis
 1) Берем официальный образ https://hub.docker.com/_/redis
 2) готовим докер [./docker-compose.yml](docker-compose.yml)
 3) **Строки**
-   1) Готовим датасет `php g_strings.php`
+   1) Готовим датасет с помощью скрипта `php g_strings.php`
    2) получаем файл ~ 20Мб команд с данными такого рода:
    3) ```shell
       SET string:1 "{\"colour\":\"blue\",\"make\":\"saab\",\"model\":93,\"features\":[\"powerlocks\",\"moonroof\"]}"
@@ -38,7 +38,7 @@ Redis
        "{\"colour\":\"blue\",\"make\":\"saab\",\"model\":93,\"features\":[\"powerlocks\",\"moonroof\"]}"
        ```
 4) **Списки**
-   1) Готовим датасет `php g_lists.php`
+   1) Готовим датасет с помощью скрипта `php g_lists.php`
    2) получаем файл ~ 20Мб команд с данными такого рода:
    3) ```shell
       RPUSH list:1 "{\"colour\":\"blue\",\"make\":\"saab\",\"model\":93,\"features\":[\"powerlocks\",\"moonroof\"]}"
@@ -62,7 +62,7 @@ Redis
        2) "{\"colour\":\"blue\",\"make\":\"saab\",\"model\":93,\"features\":[\"powerlocks\",\"moonroof\"]}"
        ```
 5) **Хэш-таблицы**
-   1) Готовим датасет `php g_hsets.php`
+   1) Готовим датасет с помощью скрипта `php g_hsets.php`
    2) получаем файл ~ 20Мб команд с данными такого рода:
    3) ```shell
       HSET hset:1 "colour" "blue" "make" "saab" "model" 93 "features" "powerlocks,moonroof" 
@@ -94,7 +94,7 @@ Redis
        8) "powerlocks,moonroof"
        ```
 6) **Упорядоченные множества**
-   1) Готовим датасет `php g_zsets.php`
+   1) Готовим датасет с помощью скрипта `php g_zsets.php`
    2) получаем файл ~ 20Мб команд с данными такого рода:
    3) ```shell
       ZADD zset 1 "{\"colour\":\"blue\",\"make\":\"saab\",\"model\":1,\"features\":[\"powerlocks\",\"moonroof\"]}"

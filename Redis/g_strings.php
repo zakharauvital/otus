@@ -7,5 +7,5 @@ JSON;
 
 for ($i = 1; $i <= 200000; $i++) {
     $data = 'SET string:'. $i . ' "'. addslashes($json) . '"' . PHP_EOL;
-    file_put_contents('./datasets/string.txt', $data, FILE_APPEND);
+    file_put_contents('./datasets/strings.txt', $data, FILE_APPEND);
 }

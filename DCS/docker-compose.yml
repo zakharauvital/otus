@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  etcd-1:
+    image: bitnami/etcd
+
+  etcd-2:
+    image: bitnami/etcd
+
+  consul-1:
+    image: consul:latest
+
+  consul-2:
+    image: consul:latest
+
+
+
+

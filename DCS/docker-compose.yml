@@ -1,18 +1,55 @@
-version: "3.9"
+version: '3.7'
 
 services:
-  etcd-1:
-    image: bitnami/etcd
 
-  etcd-2:
-    image: bitnami/etcd
+  consul-server1:
+    image: hashicorp/consul:1.11.2
+    container_name: consul-server1
+    restart: always
+    volumes:
+      - ./config/server1.json:/consul/config/server1.json:ro
+      - ./certs/:/consul/config/certs/:ro
+    networks:
+      - consul
+    ports:
+      - "8500:8500"
+      - "8600:8600/tcp"
+      - "8600:8600/udp"
+    command: "agent -bootstrap-expect=3"
 
-  consul-1:
-    image: consul:latest
+  consul-server2:
+    image: hashicorp/consul:1.11.2
+    container_name: consul-server2
+    restart: always
+    volumes:
+      - ./config/server2.json:/consul/config/server2.json:ro
+      - ./certs/:/consul/config/certs/:ro
+    networks:
+      - consul
+    command: "agent -bootstrap-expect=3"
 
-  consul-2:
-    image: consul:latest
+  consul-server3:
+    image: hashicorp/consul:1.11.2
+    container_name: consul-server3
+    restart: always
+    volumes:
+      - ./config/server3.json:/consul/config/server3.json:ro
+      - ./certs/:/consul/config/certs/:ro
+    networks:
+      - consul
+    command: "agent -bootstrap-expect=3"
 
+  consul-client:
+    image: hashicorp/consul:1.11.2
+    container_name: consul-client
+    restart: always
+    volumes:
+      - ./config/client.json:/consul/config/client.json:ro
+      - ./certs/:/consul/config/certs/:ro
+    networks:
+      - consul
+    command: "agent"
 
-
-
+networks:
+  consul:
+    driver: bridge

@@ -8,7 +8,7 @@ services:
     restart: always
     volumes:
       - ./config/server1.json:/consul/config/server1.json:ro
-      - ./certs/:/consul/config/certs/:ro
+      - ./certs/:/consul/config/certs/:rw
     networks:
       - consul
     ports:
@@ -23,7 +23,7 @@ services:
     restart: always
     volumes:
       - ./config/server2.json:/consul/config/server2.json:ro
-      - ./certs/:/consul/config/certs/:ro
+      - ./certs/:/consul/config/certs/:rw
     networks:
       - consul
     command: "agent -bootstrap-expect=3"
@@ -34,7 +34,7 @@ services:
     restart: always
     volumes:
       - ./config/server3.json:/consul/config/server3.json:ro
-      - ./certs/:/consul/config/certs/:ro
+      - ./certs/:/consul/config/certs/:rw
     networks:
       - consul
     command: "agent -bootstrap-expect=3"
@@ -45,7 +45,7 @@ services:
     restart: always
     volumes:
       - ./config/client.json:/consul/config/client.json:ro
-      - ./certs/:/consul/config/certs/:ro
+      - ./certs/:/consul/config/certs/:rw
     networks:
       - consul
     command: "agent"

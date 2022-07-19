@@ -47,5 +47,4 @@
          ```
       5) поднимаем `consul-server2` и `consul-server3` 
          1) ![img.png](img/ui-all-servers-active.png)
-4) в
  

@@ -2,30 +2,6 @@ version: "3.9"
 
 services:
 
-#  cassandra-seed:
-#    image: cassandra:latest
-#    ports:
-#      - "9042:9042"  # Expose native binary CQL port for your apps
-#    volumes:
-#      - "./data/seed:/var/lib/cassandra"
-#    environment:
-#      - "CASSANDRA_SEEDS=cassandra-seed"
-#      - "CASSANDRA_CLUSTER_NAME=cluster"
-#      - "CASSANDRA_DC=se1"
-#      - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
-
-#  cassandra1:
-#    image: cassandra:latest
-#    volumes:
-#      - "./data/db1:/var/lib/cassandra"
-#    environment:
-#      - "CASSANDRA_SEEDS=cassandra-seed"
-#      - "CASSANDRA_CLUSTER_NAME=cluster"
-#      - "CASSANDRA_DC=se1"
-#      - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
-#    depends_on:
-#      - cassandra-seed
-
   cassandra1:
     image: cassandra:latest
     volumes:

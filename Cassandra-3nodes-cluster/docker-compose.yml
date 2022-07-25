@@ -1,0 +1,68 @@
+version: "3.9"
+
+services:
+
+#  cassandra-seed:
+#    image: cassandra:latest
+#    ports:
+#      - "9042:9042"  # Expose native binary CQL port for your apps
+#    volumes:
+#      - "./data/seed:/var/lib/cassandra"
+#    environment:
+#      - "CASSANDRA_SEEDS=cassandra-seed"
+#      - "CASSANDRA_CLUSTER_NAME=cluster"
+#      - "CASSANDRA_DC=se1"
+#      - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
+
+#  cassandra1:
+#    image: cassandra:latest
+#    volumes:
+#      - "./data/db1:/var/lib/cassandra"
+#    environment:
+#      - "CASSANDRA_SEEDS=cassandra-seed"
+#      - "CASSANDRA_CLUSTER_NAME=cluster"
+#      - "CASSANDRA_DC=se1"
+#      - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
+#    depends_on:
+#      - cassandra-seed
+
+  cassandra1:
+    image: cassandra:latest
+    volumes:
+      - "./data/db1:/var/lib/cassandra"
+    environment:
+      CASSANDRA_SEEDS: "cassandra1,cassandra2"    # The first two nodes will be seeds
+      CASSANDRA_CLUSTER_NAME: TestClusterSystem
+      CASSANDRA_DC: Mars
+      CASSANDRA_RACK: West
+      CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+      CASSANDRA_NUM_TOKENS: 128
+
+  cassandra2:
+    image: cassandra:latest
+    volumes:
+      - "./data/db2:/var/lib/cassandra"
+    environment:
+      CASSANDRA_SEEDS: "cassandra1,cassandra2"    # The first two nodes will be seeds
+      CASSANDRA_CLUSTER_NAME: TestClusterSystem
+      CASSANDRA_DC: Mars
+      CASSANDRA_RACK: West
+      CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+      CASSANDRA_NUM_TOKENS: 128
+
+  cassandra3:
+    image: cassandra:latest
+    volumes:
+      - "./data/db3:/var/lib/cassandra"
+    environment:
+      CASSANDRA_SEEDS: "cassandra1,cassandra2"    # The first two nodes will be seeds
+      CASSANDRA_CLUSTER_NAME: TestClusterSystem
+      CASSANDRA_DC: Mars
+      CASSANDRA_RACK: West
+      CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+      CASSANDRA_NUM_TOKENS: 128
+
+
+
+
+

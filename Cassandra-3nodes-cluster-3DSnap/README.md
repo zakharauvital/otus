@@ -56,6 +56,7 @@
       Requested creating snapshot(s) for [cqlkeyspace] with snapshot name [cqlkeyspace-ks] and options {skipFlush=false}
       Snapshot directory: cqlkeyspace-ks
       ```
+   8) ![img.png](imgs/cqlkeyspace-snaphot.png)
 6) выбрать два на ваш вкус драйвера к Cassandra
 7) f
 

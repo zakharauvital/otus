@@ -20,7 +20,42 @@
    ```
 5) забэкапить и восстановить используя 3DSnap
    1) создаем набор данных:
+   2) ```sql
+      system> CREATE KEYSPACE cqlkeyspace
+               WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 3}
    
+      USE cqlkeyspace;
+   
+      CREATE TABLE t (
+        id int,
+        k int,
+        v text,
+        PRIMARY KEY (id)
+      );
+   
+      CREATE TABLE t2 (
+        id int,
+        k int,
+        v text,
+        PRIMARY KEY (id)
+      );
+   
+      INSERT INTO t (id, k, v) VALUES (0, 0, 'val0');
+      INSERT INTO t (id, k, v) VALUES (1, 1, 'val1');
+   
+      INSERT INTO t2 (id, k, v) VALUES (0, 0, 'val0');
+      INSERT INTO t2 (id, k, v) VALUES (1, 1, 'val1');
+      INSERT INTO t2 (id, k, v) VALUES (2, 2, 'val2');
+      ```
+   3) ![img.png](imgs/t1-data.png)
+   4) ![img.png](imgs/t2-data.png)
+   5) бекапим данные через `nodetool help snapshot`
+   6) `nodetool snapshot --tag cqlkeyspace-ks cqlkeyspace`
+   7) ```shell
+      # nodetool snapshot --tag cqlkeyspace-ks cqlkeyspace
+      Requested creating snapshot(s) for [cqlkeyspace] with snapshot name [cqlkeyspace-ks] and options {skipFlush=false}
+      Snapshot directory: cqlkeyspace-ks
+      ```
 6) выбрать два на ваш вкус драйвера к Cassandra
 7) f
 

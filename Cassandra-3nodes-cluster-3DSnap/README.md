@@ -4,7 +4,8 @@
 
 Необходимо:
 - забэкапить и восстановить используя 3DSnap ваш 3 узловый Cassandra кластер;
-- выбрать два на ваш вкус драйвера к Cassandra и сравнить их по производительности и потреблению ресурсов (используя "Apache Cassandra with JPA.pdf" из материралов).
+- выбрать два на ваш вкус драйвера к Cassandra 
+  - и сравнить их по производительности и потреблению ресурсов (используя "Apache Cassandra with JPA.pdf" из материралов).
 
 # Отчет
 
@@ -17,6 +18,10 @@
    cassandra-3nodes-cluster-cassandra2-1   "docker-entrypoint.s…"   cassandra2          running             7000-7001/tcp, 7199/tcp, 9042/tcp, 9160/tcp
    cassandra-3nodes-cluster-cassandra3-1   "docker-entrypoint.s…"   cassandra3          running             7000-7001/tcp, 7199/tcp, 9042/tcp, 9160/tcp
    ```
-5) выбрать два на ваш вкус драйвера к Cassandra
+5) забэкапить и восстановить используя 3DSnap
+   1) создаем набор данных:
+   
+6) выбрать два на ваш вкус драйвера к Cassandra
+7) f
 
  

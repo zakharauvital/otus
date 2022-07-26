@@ -6,6 +6,12 @@ services:
     image: cassandra:latest
     volumes:
       - "./data/db1:/var/lib/cassandra"
+    ports:
+#      - "7199:7199" # JMX
+#      - "7000:7000" # cluster communication
+#      - "7001:7001" # cluster communication (SSL)
+      - "9042:9042" # native protocol clients
+      - "9160:9160" # thrift clients
     environment:
       CASSANDRA_SEEDS: "cassandra1,cassandra2"    # The first two nodes will be seeds
       CASSANDRA_CLUSTER_NAME: TestClusterSystem
